@@ -3,18 +3,15 @@ import { PoolClient } from "pg";
 
 import { STATUS_CODES } from "../../../gateways/basics";
 import postgresql from "../../../gateways/postgresql";
+import { getCarts } from "../../../interactors/cart";
 
 export const getCartsController = [
   async (_: Request, res: Response, next: NextFunction) => {
-    const poolClient: PoolClient = await postgresql.pool.connect();
     try {
-      const getCartsResponse = await postgresql.getCarts(poolClient);
-
+      const getCartsResponse = await getCarts();
       res.status(STATUS_CODES.OK).json(getCartsResponse);
     } catch (error) {
       next(error);
-    } finally {
-      poolClient.release();
     }
   },
 ];

@@ -1,8 +1,8 @@
 import pool from "./api";
-import { getCarts, getCartById } from "./carts";
+import { getCartById, getCarts } from "./carts";
 
 export default {
   pool,
   getCarts,
-  getCartById
+  getCartById,
 };

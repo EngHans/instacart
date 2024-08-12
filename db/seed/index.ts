@@ -88,7 +88,7 @@ const seedData = async () => {
     const products: Product[] = [];
 
     carts.forEach((cart: Cart) => {
-      products.push(...generateProductsInCart(10, cart.id));
+      products.push(...generateProductsInCart(3, cart.id));
     });
 
     await seedTable("carts", carts);

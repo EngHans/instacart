@@ -40,7 +40,7 @@ export const getCartById = async (session: PoolClient, id: string): Promise<Cart
         WHERE %s
       `,
       DBTables.CARTS_TABLE,
-      buildCondition(["id"], [[id]])
+      buildCondition(["id"], [[id]]),
     );
 
     const { rows } = await session.query(query);
@@ -55,7 +55,7 @@ const buildCartFromRow = async (session: PoolClient, row: any): Promise<Cart> =>
   return {
     id: row.id,
     user_id: row.user_id,
-    total: row.total,
+    total: 0,
     products: await getProductsByCartId(session, row.id as string),
   };
 };

@@ -2,26 +2,25 @@
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE IF NOT EXISTS promotions (
+CREATE TABLE IF NOT EXISTS coupons (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   code VARCHAR,
   benefit FLOAT,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  CONSTRAINT promotion_pk PRIMARY KEY (id),
+  CONSTRAINT coupon_pk PRIMARY KEY (id),
   UNIQUE(code)
 );
 
 CREATE TABLE IF NOT EXISTS carts (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   user_id uuid NOT NULL,
-  promotion_code VARCHAR,
-  total FLOAT,
+  coupon_code VARCHAR,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   CONSTRAINT cart_pk PRIMARY KEY (id),
-  CONSTRAINT cart_references_promotion_fk FOREIGN KEY (promotion_code)
-    REFERENCES promotions(code)
+  CONSTRAINT cart_references_promotion_fk FOREIGN KEY (coupon_code)
+    REFERENCES coupons(code)
 );
 
 CREATE TABLE IF NOT EXISTS products (
