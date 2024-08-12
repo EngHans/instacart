@@ -3,7 +3,7 @@ import { PoolClient } from "pg";
 
 import { STATUS_CODES } from "../../../gateways/basics";
 import postgresql from "../../../gateways/postgresql";
-import { getCarts } from "../../../interactors/cart";
+import { getCarts, updateCart } from "../../../interactors/cart";
 
 export const getCartsController = [
   async (_: Request, res: Response, next: NextFunction) => {
@@ -28,6 +28,19 @@ export const getCartByIdController = [
       next(error);
     } finally {
       poolClient.release();
+    }
+  },
+];
+
+export const updateCartByIdController = [
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const { coupon_code } = req.body;
+      const getCartsResponse = await updateCart({ cart_id: id, coupon_code });
+      res.status(STATUS_CODES.OK).json(getCartsResponse);
+    } catch (error) {
+      next(error);
     }
   },
 ];

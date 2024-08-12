@@ -51,10 +51,34 @@ export const getCartById = async (session: PoolClient, id: string): Promise<Cart
   }
 };
 
+export const saveCart = async (session: PoolClient, cart: Cart): Promise<void> => {
+  try {
+    const query = format(
+      `
+      INSERT INTO %s (id, user_id, promotion_code, created_at, updated_at)
+        VALUES(%s, %s, %s, now(), now())
+        ON CONFLICT (id)
+        DO UPDATE SET
+          promotion_code = EXCLUDED.promotion_code,
+          updated_at = EXCLUDED.updated_at,
+      `,
+      DBTables.CARTS_TABLE,
+      cart.id,
+      cart.user_id,
+      cart.coupon_code,
+    );
+
+    await session.query(query);
+  } catch (error) {
+    throw new NotFoundError(ErrorMessage.COULD_NOT_SAVE_CART);
+  }
+};
+
 const buildCartFromRow = async (session: PoolClient, row: any): Promise<Cart> => {
   return {
     id: row.id,
     user_id: row.user_id,
+    coupon_code: row.coupon_code ?? null,
     total: 0,
     products: await getProductsByCartId(session, row.id as string),
   };

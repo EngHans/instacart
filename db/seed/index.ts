@@ -24,6 +24,11 @@ interface Product {
   price: number;
 }
 
+interface Coupon {
+  code: string;
+  benefit: number;
+}
+
 const generateCarts = (count: number): Cart[] => {
   const carts: Cart[] = [];
   for (let i = 0; i < count; i++) {
@@ -46,6 +51,13 @@ const generateProduct = (cart_id: string): Product => {
     sku: faker.string.uuid(),
     quantity: faker.number.int({ min: 1, max: 10 }),
     price: faker.number.float({ min: 0, max: 10, fractionDigits: 2 }),
+  };
+};
+
+const generateCoupon = (): Coupon => {
+  return {
+    code: "SUPER_DISCOUNT",
+    benefit: faker.number.int({ min: 1, max: 10 }) * 10,
   };
 };
 
@@ -83,6 +95,7 @@ const seedTable = async (tableName: string, data: Object[]) => {
 
 const seedData = async () => {
   try {
+    const coupons = [generateCoupon()];
     const carts = generateCarts(10);
 
     const products: Product[] = [];
@@ -93,6 +106,7 @@ const seedData = async () => {
 
     await seedTable("carts", carts);
     await seedTable("products", products);
+    await seedTable("coupons", coupons);
 
     console.log("Seeding completed successfully");
   } catch (err) {
