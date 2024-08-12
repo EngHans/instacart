@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  insta_database:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 3s
+      timeout: 6s
+      retries: 5
+      start_period: 8s
+
+  dbmate:
+    image: amacneil/dbmate:v1.12.0
+    container_name: dbmate_instacart_live_challenge
+    user: "1000:1000"
+    environment:
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@insta_database:5432/postgres?sslmode=disable
+    volumes:
+      - ./db:/db
+    depends_on:
+      insta_database:
+        condition: service_healthy
+    command: -d db/migrations/ up
