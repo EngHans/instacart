@@ -128,3 +128,16 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Build directory
+build/
+
+# App configuration file
+config.json
+
+# Terraform Generated
+.terraform
+.hcl
+
+# dbmate Generated
+db/schema.sql
