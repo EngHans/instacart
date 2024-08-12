@@ -3,6 +3,7 @@ import format from "pg-format";
 export enum DBTables {
   CARTS_TABLE = "carts",
   PRODUCTS_TABLE = "products",
+  COUPONS_TABLE = "coupons",
 }
 
 export const buildCondition = (searchKeys: string[], searchValues: string[][]): string => {

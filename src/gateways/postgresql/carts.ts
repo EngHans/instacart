@@ -6,6 +6,7 @@ import { ErrorMessage } from "../../errors/errors";
 import { NotFoundError } from "../../errors/notFound.error";
 import { buildCondition, DBTables } from "./basic";
 import { getProductsByCartId } from "./products";
+import { getCouponByCouponCode } from "./coupons";
 
 export const getCarts = async (session: PoolClient): Promise<Cart[]> => {
   try {
@@ -81,5 +82,6 @@ const buildCartFromRow = async (session: PoolClient, row: any): Promise<Cart> =>
     coupon_code: row.coupon_code ?? null,
     total: 0,
     products: await getProductsByCartId(session, row.id as string),
+    coupon: row.coupon_code ? await getCouponByCouponCode(session, row.coupon_code as string) : null
   };
 };

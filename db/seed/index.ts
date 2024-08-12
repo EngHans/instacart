@@ -14,7 +14,6 @@ const pool = new Pool({
 interface Cart {
   id: string;
   user_id: string;
-  total: number;
 }
 
 interface Product {
@@ -65,7 +64,6 @@ const generateCart = (): Cart => {
   return {
     id: faker.string.uuid(),
     user_id: faker.string.uuid(),
-    total: faker.number.float({ min: 10, max: 100, fractionDigits: 2 }),
   };
 };
 

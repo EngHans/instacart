@@ -1,3 +1,4 @@
+import { Coupon } from "./coupons";
 import { Product } from "./products";
 
 export interface Cart {
@@ -6,6 +7,7 @@ export interface Cart {
   total: number;
   coupon_code: string | null;
   products: Product[];
+  coupon: Coupon | null;
 }
 
 export interface UpdateCartInput {
