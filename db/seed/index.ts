@@ -12,19 +12,49 @@ const pool = new Pool({
 });
 
 interface Cart {
+  id: string;
   user_id: string;
   total: number;
+}
+
+interface Product {
+  cart_id: string;
+  sku: string;
+  quantity: number;
+  price: number;
 }
 
 const generateCarts = (count: number): Cart[] => {
   const carts: Cart[] = [];
   for (let i = 0; i < count; i++) {
-    carts.push({
-      user_id: faker.string.uuid(),
-      total: faker.number.float({ min: 10, max: 100, fractionDigits: 2 }),
-    });
+    carts.push(generateCart());
   }
   return carts;
+};
+
+const generateProductsInCart = (count: number, cart_id: string): Product[] => {
+  const products: Product[] = [];
+  for (let i = 0; i < count; i++) {
+    products.push(generateProduct(cart_id));
+  }
+  return products;
+};
+
+const generateProduct = (cart_id: string): Product => {
+  return {
+    cart_id,
+    sku: faker.string.uuid(),
+    quantity: faker.number.int({ min: 1, max: 1000 }),
+    price: faker.number.int({ min: 1 }),
+  };
+};
+
+const generateCart = (): Cart => {
+  return {
+    id: faker.string.uuid(),
+    user_id: faker.string.uuid(),
+    total: faker.number.float({ min: 10, max: 100, fractionDigits: 2 }),
+  };
 };
 
 const seedTable = async (tableName: string, data: Object[]) => {
@@ -53,9 +83,16 @@ const seedTable = async (tableName: string, data: Object[]) => {
 
 const seedData = async () => {
   try {
-    const users = generateCarts(10);
+    const carts = generateCarts(10);
 
-    await seedTable("carts", users);
+    const products: Product[] = [];
+
+    carts.forEach((cart: Cart) => {
+      products.push(...generateProductsInCart(10, cart.id));
+    });
+
+    await seedTable("carts", carts);
+    await seedTable("products", products);
 
     console.log("Seeding completed successfully");
   } catch (err) {

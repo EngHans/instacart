@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import format from "pg-format";
 
 import { Cart } from "../../entities/carts";
@@ -5,14 +6,15 @@ import { ErrorMessage } from "../../errors/errors";
 import { NotFoundError } from "../../errors/notFound.error";
 import { DBTables } from "./basic";
 
-export const getCarts = async (session: any): Promise<Cart[]> => {
+export const getCarts = async (session: PoolClient): Promise<Cart[]> => {
   try {
     const query = format(
       `
         SELECT 
           *
-        FROM ${DBTables.CARTS_TABLE}
+        FROM %s
       `,
+      DBTables.CARTS_TABLE,
     );
 
     const { rows } = await session.query(query);
@@ -28,5 +30,6 @@ function buildCartFromRow(row: any): Cart {
     id: row.id,
     user_id: row.user_id,
     total: row.total,
+    products: [], // @TODO: Add products dinamically
   };
 }

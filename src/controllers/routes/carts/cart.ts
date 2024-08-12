@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
+import { PoolClient } from "pg";
 
 import { STATUS_CODES } from "../../../gateways/basics";
 import postgresql from "../../../gateways/postgresql";
 
 export const getCartsController = [
   async (_: Request, res: Response, next: NextFunction) => {
-    const poolClient = await postgresql.pool.connect();
+    const poolClient: PoolClient = await postgresql.pool.connect();
     try {
       const getCartsResponse = await postgresql.getCarts(poolClient);
 
