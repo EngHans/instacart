@@ -44,8 +44,8 @@ const generateProduct = (cart_id: string): Product => {
   return {
     cart_id,
     sku: faker.string.uuid(),
-    quantity: faker.number.int({ min: 1, max: 1000 }),
-    price: faker.number.int({ min: 1 }),
+    quantity: faker.number.int({ min: 1, max: 10 }),
+    price: faker.number.float({ min: 0, max: 10, fractionDigits: 2 }),
   };
 };
 

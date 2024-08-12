@@ -13,7 +13,7 @@ export const getProductsByCartId = async (session: PoolClient, cart_id: string):
         SELECT 
           *
         FROM %s
-        WHERE %I
+        WHERE %s
       `,
       DBTables.PRODUCTS_TABLE,
       buildCondition(["cart_id"], [[cart_id]]),
@@ -27,7 +27,7 @@ export const getProductsByCartId = async (session: PoolClient, cart_id: string):
   }
 };
 
-function buildProductFromRow(row: any): Product {
+const buildProductFromRow = (row: any): Product => {
   return {
     id: row.id,
     cart_id: row.cart_id,
@@ -35,4 +35,4 @@ function buildProductFromRow(row: any): Product {
     sku: row.sku,
     quantity: row.quantity,
   };
-}
+};

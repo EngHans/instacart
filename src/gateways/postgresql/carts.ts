@@ -5,6 +5,7 @@ import { Cart } from "../../entities/carts";
 import { ErrorMessage } from "../../errors/errors";
 import { NotFoundError } from "../../errors/notFound.error";
 import { DBTables } from "./basic";
+import { getProductsByCartId } from "./products";
 
 export const getCarts = async (session: PoolClient): Promise<Cart[]> => {
   try {
@@ -19,17 +20,21 @@ export const getCarts = async (session: PoolClient): Promise<Cart[]> => {
 
     const { rows } = await session.query(query);
 
-    return rows.map(buildCartFromRow);
+    return Promise.all(
+      rows.map((row) => {
+        return buildCartFromRow(session, row);
+      }),
+    );
   } catch (error) {
     throw new NotFoundError(ErrorMessage.COULD_NOT_FIND_CARTS);
   }
 };
 
-function buildCartFromRow(row: any): Cart {
+const buildCartFromRow = async (session: PoolClient, row: any): Promise<Cart> => {
   return {
     id: row.id,
     user_id: row.user_id,
     total: row.total,
-    products: [], // @TODO: Add products dinamically
+    products: await getProductsByCartId(session, row.id as string),
   };
-}
+};
