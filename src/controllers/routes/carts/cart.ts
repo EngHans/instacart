@@ -18,3 +18,19 @@ export const getCartsController = [
     }
   },
 ];
+
+export const getCartByIdController = [
+  async (req: Request, res: Response, next: NextFunction) => {
+    const poolClient: PoolClient = await postgresql.pool.connect();
+    const { id } = req.params;
+    try {
+      const getCartsResponse = await postgresql.getCartById(poolClient, id);
+
+      res.status(STATUS_CODES.OK).json(getCartsResponse);
+    } catch (error) {
+      next(error);
+    } finally {
+      poolClient.release();
+    }
+  },
+];

@@ -4,7 +4,7 @@ import format from "pg-format";
 import { Cart } from "../../entities/carts";
 import { ErrorMessage } from "../../errors/errors";
 import { NotFoundError } from "../../errors/notFound.error";
-import { DBTables } from "./basic";
+import { buildCondition, DBTables } from "./basic";
 import { getProductsByCartId } from "./products";
 
 export const getCarts = async (session: PoolClient): Promise<Cart[]> => {
@@ -27,6 +27,27 @@ export const getCarts = async (session: PoolClient): Promise<Cart[]> => {
     );
   } catch (error) {
     throw new NotFoundError(ErrorMessage.COULD_NOT_FIND_CARTS);
+  }
+};
+
+export const getCartById = async (session: PoolClient, id: string): Promise<Cart> => {
+  try {
+    const query = format(
+      `
+        SELECT 
+          *
+        FROM %s
+        WHERE %s
+      `,
+      DBTables.CARTS_TABLE,
+      buildCondition(["id"], [[id]])
+    );
+
+    const { rows } = await session.query(query);
+
+    return buildCartFromRow(session, rows[0]);
+  } catch (error) {
+    throw new NotFoundError(ErrorMessage.COULD_NOT_FIND_CART);
   }
 };
 

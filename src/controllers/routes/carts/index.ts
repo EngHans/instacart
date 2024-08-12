@@ -1,9 +1,10 @@
 import { Router } from "express";
 
-import { getCartsController } from "./cart";
+import { getCartByIdController, getCartsController } from "./cart";
 
 const carts = Router();
 
 carts.get("/", getCartsController);
+carts.get("/:id", getCartByIdController);
 
 export default carts;
