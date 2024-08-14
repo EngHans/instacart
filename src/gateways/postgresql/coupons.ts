@@ -1,10 +1,10 @@
 import { PoolClient } from "pg";
 import format from "pg-format";
 
+import { Coupon } from "../../entities/coupons";
 import { ErrorMessage } from "../../errors/errors";
 import { NotFoundError } from "../../errors/notFound.error";
 import { buildCondition, DBTables } from "./basic";
-import { Coupon } from "../../entities/coupons";
 
 export const getCouponByCouponCode = async (session: PoolClient, coupon_code: string): Promise<Coupon> => {
   try {
