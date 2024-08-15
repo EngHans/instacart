@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { PoolClient } from "pg";
 
 import { STATUS_CODES } from "../../../gateways/basics";
-import postgresql from "../../../gateways/postgresql";
-import { getCarts, updateCart } from "../../../interactors/cart";
+import { getCartById, getCarts, getLoyaltyPointsByCartId, updateCart } from "../../../interactors/cart";
 
 export const getCartsController = [
   async (_: Request, res: Response, next: NextFunction) => {
@@ -18,16 +16,12 @@ export const getCartsController = [
 
 export const getCartByIdController = [
   async (req: Request, res: Response, next: NextFunction) => {
-    const poolClient: PoolClient = await postgresql.pool.connect();
-    const { id } = req.params;
     try {
-      const getCartsResponse = await postgresql.getCartById(poolClient, id);
-
+      const { id } = req.params;
+      const getCartsResponse = await getCartById(id);
       res.status(STATUS_CODES.OK).json(getCartsResponse);
     } catch (error) {
       next(error);
-    } finally {
-      poolClient.release();
     }
   },
 ];
@@ -39,6 +33,19 @@ export const updateCartByIdController = [
       const { coupon_code } = req.body;
       const getCartsResponse = await updateCart({ cart_id: id, coupon_code });
       res.status(STATUS_CODES.OK).json(getCartsResponse);
+    } catch (error) {
+      next(error);
+    }
+  },
+];
+
+export const getLoyaltyPointsByCartIdController = [
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const getLoyaltyPointsResponse = await getLoyaltyPointsByCartId({ cart_id: id });
+
+      res.status(STATUS_CODES.OK).json(getLoyaltyPointsResponse);
     } catch (error) {
       next(error);
     }

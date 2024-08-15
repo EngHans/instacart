@@ -14,3 +14,7 @@ export interface UpdateCartInput {
   cart_id: string;
   coupon_code?: string;
 }
+
+export interface MaximumRedeemablePoints {
+  points: number;
+}

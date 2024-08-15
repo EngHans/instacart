@@ -1,7 +1,8 @@
 import { PoolClient } from "pg";
 
-import { Cart, UpdateCartInput } from "../entities/carts";
+import { Cart, MaximumRedeemablePoints, UpdateCartInput } from "../entities/carts";
 import postgresql from "../gateways/postgresql";
+import { getMaximumRedeemablePoints } from "../use-cases/loyalty";
 import { calculateTotal } from "../use-cases/totalCalculator";
 import { isUndefined } from "../utils.ts";
 
@@ -23,6 +24,22 @@ export const getCarts = async (): Promise<Cart[]> => {
   }
 };
 
+export const getCartById = async (id: string): Promise<Cart> => {
+  const poolClient: PoolClient = await postgresql.pool.connect();
+  try {
+    const getCartResponse = await postgresql.getCartById(poolClient, id);
+
+    getCartResponse.total = calculateTotal(getCartResponse);
+
+    return getCartResponse;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    poolClient.release();
+  }
+};
+
 export const updateCart = async (input: UpdateCartInput): Promise<Cart> => {
   const poolClient: PoolClient = await postgresql.pool.connect();
   try {
@@ -34,6 +51,22 @@ export const updateCart = async (input: UpdateCartInput): Promise<Cart> => {
 
     await postgresql.saveCart(poolClient, cart);
     return cart;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    poolClient.release();
+  }
+};
+
+export const getLoyaltyPointsByCartId = async (input: UpdateCartInput): Promise<MaximumRedeemablePoints> => {
+  const poolClient: PoolClient = await postgresql.pool.connect();
+  try {
+    const cart = await postgresql.getCartById(poolClient, input.cart_id);
+
+    const points = await getMaximumRedeemablePoints(cart);
+
+    return { points };
   } catch (error) {
     console.error(error);
     throw error;
