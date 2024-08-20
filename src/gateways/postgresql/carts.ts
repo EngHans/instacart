@@ -56,12 +56,12 @@ export const saveCart = async (session: PoolClient, cart: Cart): Promise<void> =
   try {
     const query = format(
       `
-      INSERT INTO %s (id, user_id, promotion_code, created_at, updated_at)
-        VALUES(%s, %s, %s, now(), now())
+      INSERT INTO %s (id, user_id, coupon_code, created_at, updated_at)
+        VALUES(%L, %L, %L, now(), now())
         ON CONFLICT (id)
         DO UPDATE SET
-          promotion_code = EXCLUDED.promotion_code,
-          updated_at = EXCLUDED.updated_at,
+          coupon_code = EXCLUDED.coupon_code,
+          updated_at = EXCLUDED.updated_at
       `,
       DBTables.CARTS_TABLE,
       cart.id,
