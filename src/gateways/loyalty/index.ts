@@ -12,5 +12,21 @@ export interface RedemptionEquivalenceResponse {
 }
 
 export const getCustomerLoyaltyDetails = async (user_id: string): Promise<LoyaltyResponse> => {
-  return httpRequest<LoyaltyResponse>("GET", `/api/customers/${user_id}/loyalty`);
+  const customerLoyaltyResponse = await httpRequest("GET", `/api/customers/${user_id}/loyalty`);
+  return buildLoyaltyResponse(customerLoyaltyResponse);
+};
+
+const buildLoyaltyResponse = (response: any): LoyaltyResponse => {
+  return {
+    points: response.points as number,
+    redemptionEquivalence: buildEquivalenceFromResponse(response.redemptionEquivalence),
+  };
+};
+
+const buildEquivalenceFromResponse = (response: any): RedemptionEquivalenceResponse => {
+  return {
+    currencyCode: response.currencyCode as string,
+    conversionRate: parseInt(response.conversionRate as string, 10),
+    conversionValue: parseInt(response.conversionValue as string, 10),
+  };
 };

@@ -126,17 +126,7 @@
     "eol-last": "off",
     "eqeqeq": ["error", "smart"],
     "guard-for-in": "error",
-    "id-denylist": [
-      "error",
-      "any",
-      "Number",
-      "String",
-      "string",
-      "Boolean",
-      "boolean",
-      "Undefined",
-      "undefined"
-    ],
+    "id-denylist": ["error", "any", "Number", "String", "string", "Boolean", "boolean", "Undefined", "undefined"],
     "id-match": "error",
     "import/order": "error",
     "import/no-duplicates": "error",

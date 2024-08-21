@@ -47,6 +47,7 @@ export const updateCart = async (input: UpdateCartInput): Promise<Cart> => {
 
     if (!isUndefined(input.coupon_code)) {
       cart.coupon_code = input.coupon_code ?? null;
+      cart.total = calculateTotal(cart);
     }
 
     await postgresql.saveCart(poolClient, cart);
