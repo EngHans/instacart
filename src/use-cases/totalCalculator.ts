@@ -8,7 +8,7 @@ export const calculateTotal = (cart: Cart): number => {
 
   const discounts = calculateDiscounts(cart, totalBeforeDiscounts);
 
-  return totalBeforeDiscounts - discounts;
+  return Math.max(0, totalBeforeDiscounts - discounts);
 };
 
 export const calculateDiscounts = (cart: Cart, subtotal: number): number => {
