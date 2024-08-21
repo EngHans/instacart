@@ -47,7 +47,7 @@ export const updateCart = async (input: UpdateCartInput): Promise<Cart> => {
 
     if (!isUndefined(input.coupon_code)) {
       cart.coupon_code = input.coupon_code ?? null;
-      // updateTotal
+      cart.total = await calculateTotal(cart);
     }
 
     if (!isUndefined(input.points)) {
@@ -56,6 +56,7 @@ export const updateCart = async (input: UpdateCartInput): Promise<Cart> => {
         throw new Error("POINTS_EXCEED_MAXIMUM_POSSIBLE_REDEMPTION");
       }
       cart.points = input.points!;
+      cart.total = await calculateTotal(cart);
     }
 
     await postgresql.saveCart(poolClient, cart);

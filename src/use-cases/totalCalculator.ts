@@ -23,10 +23,7 @@ export const calculateCouponDiscounts = (coupon: Coupon | null, subtotal: number
   return coupon ? subtotal * (coupon.benefit / 100) : 0;
 };
 
-export const calculateLoyaltyDiscounts = async (
-  userId: string,
-  points: number | null,
-): Promise<number> => {
+export const calculateLoyaltyDiscounts = async (userId: string, points: number | null): Promise<number> => {
   if (points) {
     const equivalence = await getLoyaltyPointsEquivalence(userId, points);
     return equivalence.conversionValue;

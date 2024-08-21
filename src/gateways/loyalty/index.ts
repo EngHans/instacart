@@ -11,8 +11,9 @@ export interface RedemptionEquivalenceResponse {
   conversionValue: number;
 }
 
-export const getCustomerLoyaltyDetails = async (userId: string): Promise<LoyaltyResponse> => {
-  return httpRequest<LoyaltyResponse>("GET", `/api/customers/${userId}/loyalty`);
+export const getCustomerLoyaltyDetails = async (user_id: string): Promise<LoyaltyResponse> => {
+  const customerLoyaltyResponse = await httpRequest("GET", `/api/customers/${user_id}/loyalty`);
+  return buildLoyaltyResponse(customerLoyaltyResponse);
 };
 
 export const getLoyaltyPointsEquivalence = async (
@@ -21,6 +22,13 @@ export const getLoyaltyPointsEquivalence = async (
 ): Promise<RedemptionEquivalenceResponse> => {
   const sourceResponse = await httpRequest("GET", `/api/customers/${userId}/loyalty/points/${points}/equivalence`);
   return buildEquivalenceFromResponse(sourceResponse);
+};
+
+const buildLoyaltyResponse = (response: any): LoyaltyResponse => {
+  return {
+    points: response.points as number,
+    redemptionEquivalence: buildEquivalenceFromResponse(response.redemptionEquivalence),
+  };
 };
 
 const buildEquivalenceFromResponse = (response: any): RedemptionEquivalenceResponse => {
