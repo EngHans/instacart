@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS carts (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   user_id uuid NOT NULL,
   coupon_code VARCHAR,
+  points INT,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   CONSTRAINT cart_pk PRIMARY KEY (id),

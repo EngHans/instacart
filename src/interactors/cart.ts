@@ -11,8 +11,8 @@ export const getCarts = async (): Promise<Cart[]> => {
   try {
     const getCartsResponse = await postgresql.getCarts(poolClient);
 
-    getCartsResponse.forEach((cart: Cart) => {
-      cart.total = calculateTotal(cart);
+    getCartsResponse.forEach(async (cart: Cart) => {
+      cart.total = await calculateTotal(cart);
     });
 
     return getCartsResponse;
@@ -29,7 +29,7 @@ export const getCartById = async (id: string): Promise<Cart> => {
   try {
     const getCartResponse = await postgresql.getCartById(poolClient, id);
 
-    getCartResponse.total = calculateTotal(getCartResponse);
+    getCartResponse.total = await calculateTotal(getCartResponse);
 
     return getCartResponse;
   } catch (error) {
@@ -47,6 +47,15 @@ export const updateCart = async (input: UpdateCartInput): Promise<Cart> => {
 
     if (!isUndefined(input.coupon_code)) {
       cart.coupon_code = input.coupon_code ?? null;
+      // updateTotal
+    }
+
+    if (!isUndefined(input.points)) {
+      const maxPossiblePoints = await getMaximumRedeemablePoints(cart);
+      if (input.points! > maxPossiblePoints) {
+        throw new Error("POINTS_EXCEED_MAXIMUM_POSSIBLE_REDEMPTION");
+      }
+      cart.points = input.points!;
     }
 
     await postgresql.saveCart(poolClient, cart);
