@@ -51,10 +51,6 @@ export const updateCart = async (input: UpdateCartInput): Promise<Cart> => {
     }
 
     if (!isUndefined(input.points)) {
-      const maxPossiblePoints = await getMaximumRedeemablePoints(cart);
-      if (input.points! > maxPossiblePoints) {
-        throw new Error("POINTS_EXCEED_MAXIMUM_POSSIBLE_REDEMPTION");
-      }
       cart.points = input.points!;
       cart.total = await calculateTotal(cart);
     }
