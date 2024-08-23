@@ -3,7 +3,7 @@ import { PoolClient } from "pg";
 import { Cart, MaximumRedeemablePoints, UpdateCartInput } from "../entities/carts";
 import postgresql from "../gateways/postgresql";
 import { getMaximumRedeemablePoints } from "../use-cases/loyalty";
-import { calculateTotal } from "../use-cases/totalCalculator";
+import { calculateTotal, calculateTotalWithPoints } from "../use-cases/totalCalculator";
 import { isUndefined } from "../utils.ts";
 
 export const getCarts = async (): Promise<Cart[]> => {
@@ -48,6 +48,12 @@ export const updateCart = async (input: UpdateCartInput): Promise<Cart> => {
     if (!isUndefined(input.coupon_code)) {
       cart.coupon_code = input.coupon_code ?? null;
       cart.total = calculateTotal(cart);
+    }
+
+    if (!isUndefined(input.points)) {
+      cart.points = input.points ?? null;
+      const { user_id } = cart;
+      cart.total = await calculateTotalWithPoints(cart, user_id);
     }
 
     await postgresql.saveCart(poolClient, cart);

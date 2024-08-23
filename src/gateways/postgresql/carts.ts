@@ -56,17 +56,19 @@ export const saveCart = async (session: PoolClient, cart: Cart): Promise<void> =
   try {
     const query = format(
       `
-      INSERT INTO %s (id, user_id, coupon_code, created_at, updated_at)
-        VALUES(%L, %L, %L, now(), now())
+      INSERT INTO %s (id, user_id, coupon_code, created_at, updated_at, points)
+        VALUES(%L, %L, %L, now(), now(), %L)
         ON CONFLICT (id)
         DO UPDATE SET
           coupon_code = EXCLUDED.coupon_code,
-          updated_at = EXCLUDED.updated_at
+          updated_at = EXCLUDED.updated_at,
+          points = EXCLUDED.points
       `,
       DBTables.CARTS_TABLE,
       cart.id,
       cart.user_id,
       cart.coupon_code,
+      cart.points,
     );
 
     await session.query(query);
@@ -83,5 +85,6 @@ const buildCartFromRow = async (session: PoolClient, row: any): Promise<Cart> =>
     total: 0,
     products: await getProductsByCartId(session, row.id as string),
     coupon: row.coupon_code ? await getCouponByCouponCode(session, row.coupon_code as string) : null,
+    points: row.points ?? null,
   };
 };
