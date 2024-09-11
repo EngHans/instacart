@@ -11,9 +11,11 @@ export const getCarts = async (): Promise<Cart[]> => {
   try {
     const getCartsResponse = await postgresql.getCarts(poolClient);
 
-    getCartsResponse.forEach(async (cart: Cart) => {
-      cart.total = await calculateTotal(cart);
-    });
+    await Promise.all(
+      getCartsResponse.map(async (cart: Cart) => {
+        cart.total = await calculateTotal(cart);
+      })
+    );
 
     return getCartsResponse;
   } catch (error) {
