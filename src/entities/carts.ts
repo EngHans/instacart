@@ -6,6 +6,7 @@ export interface Cart {
   user_id: string;
   total: number;
   coupon_code: string | null;
+  points: number | null;
   products: Product[];
   coupon: Coupon | null;
 }
@@ -13,6 +14,7 @@ export interface Cart {
 export interface UpdateCartInput {
   cart_id: string;
   coupon_code?: string;
+  points?: number | null;
 }
 
 export interface MaximumRedeemablePoints {

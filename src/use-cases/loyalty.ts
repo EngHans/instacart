@@ -4,13 +4,13 @@ import { calculateTotal } from "./totalCalculator";
 
 export const getMaximumRedeemablePoints = async (cart: Cart): Promise<number> => {
   const availablePointsByCustomer = await getCustomerLoyaltyDetails(cart.user_id);
-  const cartValueInPoints = parsePointsEquivalenceFromCart(cart, availablePointsByCustomer);
+  const cartValueInPoints = await parsePointsEquivalenceFromCart(cart, availablePointsByCustomer);
 
   return Math.min(availablePointsByCustomer.points, cartValueInPoints);
 };
 
-const parsePointsEquivalenceFromCart = (cart: Cart, loyaltyPoints: LoyaltyResponse): number => {
-  const equivalentPoints = calculateTotal(cart) * loyaltyPoints.redemptionEquivalence.conversionRate;
+const parsePointsEquivalenceFromCart = async (cart: Cart, loyaltyPoints: LoyaltyResponse): Promise<number> => {
+  const equivalentPoints = (await calculateTotal(cart, false)) * loyaltyPoints.redemptionEquivalence.conversionRate;
   const roundedPoints = Math.floor(equivalentPoints);
 
   return roundedPoints;

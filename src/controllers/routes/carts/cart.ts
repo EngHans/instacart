@@ -30,8 +30,8 @@ export const updateCartByIdController = [
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const { coupon_code } = req.body;
-      const getCartsResponse = await updateCart({ cart_id: id, coupon_code });
+      const { coupon_code, points } = req.body;
+      const getCartsResponse = await updateCart({ cart_id: id, coupon_code, points });
       res.status(STATUS_CODES.OK).json(getCartsResponse);
     } catch (error) {
       next(error);
