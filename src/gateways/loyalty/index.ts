@@ -30,3 +30,11 @@ const buildEquivalenceFromResponse = (response: any): RedemptionEquivalenceRespo
     conversionValue: parseInt(response.conversionValue as string, 10),
   };
 };
+
+export const redeemLoyaltyPoints = async (user_id: string, points: number): Promise<number> => {
+  const {conversionValue} = await httpRequest<{conversionValue: number}>("GET", `/api/customers/${user_id}/loyalty/points/${points}/equivalence`);
+  return conversionValue;
+};
+
+
+

@@ -8,11 +8,13 @@ export interface Cart {
   coupon_code: string | null;
   products: Product[];
   coupon: Coupon | null;
+  redeemed_points: number;
 }
 
 export interface UpdateCartInput {
   cart_id: string;
   coupon_code?: string;
+  points?: number;
 }
 
 export interface MaximumRedeemablePoints {
