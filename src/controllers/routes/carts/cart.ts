@@ -1,7 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 
 import { STATUS_CODES } from "../../../gateways/basics";
-import { getCartById, getCarts, getLoyaltyPointsByCartId, updateCart } from "../../../interactors/cart";
+import {
+  getCartById,
+  getCarts,
+  getLoyaltyPointsByCartId,
+  redeemLoyaltyPointsByCartId,
+  updateCart,
+} from "../../../interactors/cart";
 
 export const getCartsController = [
   async (_: Request, res: Response, next: NextFunction) => {
@@ -46,6 +52,24 @@ export const getLoyaltyPointsByCartIdController = [
       const getLoyaltyPointsResponse = await getLoyaltyPointsByCartId({ cart_id: id });
 
       res.status(STATUS_CODES.OK).json(getLoyaltyPointsResponse);
+    } catch (error) {
+      next(error);
+    }
+  },
+];
+
+export const redeemLoyaltyPointsByCartIdController = [
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const { points } = req.body;
+      if (!points || typeof points !== "number") {
+        res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Invalid points to redeem" });
+        return;
+      }
+      const cart = await redeemLoyaltyPointsByCartId({ cart_id: id, points_to_redeem: points });
+
+      res.status(STATUS_CODES.OK).json({ car: cart });
     } catch (error) {
       next(error);
     }

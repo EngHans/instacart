@@ -4,6 +4,7 @@ import { Product } from "./products";
 export interface Cart {
   id: string;
   user_id: string;
+  points_redeemed: number;
   total: number;
   coupon_code: string | null;
   products: Product[];
@@ -15,6 +16,10 @@ export interface UpdateCartInput {
   coupon_code?: string;
 }
 
+export interface RedeemCartInput {
+  cart_id: string;
+  points_to_redeem: number;
+}
 export interface MaximumRedeemablePoints {
   points: number;
 }

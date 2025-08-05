@@ -51,22 +51,23 @@ export const getCartById = async (session: PoolClient, id: string): Promise<Cart
     throw new NotFoundError(ErrorMessage.COULD_NOT_FIND_CART);
   }
 };
-
 export const saveCart = async (session: PoolClient, cart: Cart): Promise<void> => {
   try {
     const query = format(
       `
-      INSERT INTO %s (id, user_id, coupon_code, created_at, updated_at)
-        VALUES(%L, %L, %L, now(), now())
+      INSERT INTO %s (id, user_id, coupon_code, points_redeemed, created_at, updated_at)
+        VALUES(%L, %L, %L, %L,now(), now())
         ON CONFLICT (id)
         DO UPDATE SET
           coupon_code = EXCLUDED.coupon_code,
+          points_redeemed = EXCLUDED.points_redeemed,
           updated_at = EXCLUDED.updated_at
       `,
       DBTables.CARTS_TABLE,
       cart.id,
       cart.user_id,
       cart.coupon_code,
+      cart.points_redeemed,
     );
 
     await session.query(query);
@@ -78,6 +79,7 @@ export const saveCart = async (session: PoolClient, cart: Cart): Promise<void> =
 const buildCartFromRow = async (session: PoolClient, row: any): Promise<Cart> => {
   return {
     id: row.id,
+    points_redeemed: row.points_redeemed,
     user_id: row.user_id,
     coupon_code: row.coupon_code ?? null,
     total: 0,

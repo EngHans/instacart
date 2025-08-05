@@ -15,7 +15,13 @@ export const getCustomerLoyaltyDetails = async (user_id: string): Promise<Loyalt
   const customerLoyaltyResponse = await httpRequest("GET", `/api/customers/${user_id}/loyalty`);
   return buildLoyaltyResponse(customerLoyaltyResponse);
 };
-
+export const getEquivalencePoints = async (user_id: string, points: number): Promise<number> => {
+  const pointsEquivalenceLoyaltyResponse = await httpRequest<{ conversionValue: string }>(
+    "GET",
+    `/api/customers/${user_id}/loyalty/points/${points}/equivalence`,
+  );
+  return Number(pointsEquivalenceLoyaltyResponse.conversionValue);
+};
 const buildLoyaltyResponse = (response: any): LoyaltyResponse => {
   return {
     points: response.points as number,
