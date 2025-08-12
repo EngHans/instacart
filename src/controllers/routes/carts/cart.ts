@@ -1,7 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 
 import { STATUS_CODES } from "../../../gateways/basics";
-import { getCartById, getCarts, getLoyaltyPointsByCartId, updateCart } from "../../../interactors/cart";
+import {
+  getCartById,
+  getCarts,
+  getLoyaltyPointsAmountByCartId,
+  getLoyaltyPointsByCartId,
+  updateCart,
+} from "../../../interactors/cart";
 
 export const getCartsController = [
   async (_: Request, res: Response, next: NextFunction) => {
@@ -44,6 +50,20 @@ export const getLoyaltyPointsByCartIdController = [
     try {
       const { id } = req.params;
       const getLoyaltyPointsResponse = await getLoyaltyPointsByCartId({ cart_id: id });
+
+      res.status(STATUS_CODES.OK).json(getLoyaltyPointsResponse);
+    } catch (error) {
+      next(error);
+    }
+  },
+];
+
+export const applyLoyaltyPointsToCart = [
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id, points } = req.params;
+      console.log({ id, points });
+      const getLoyaltyPointsResponse = await getLoyaltyPointsAmountByCartId({ cart_id: id, points: +points });
 
       res.status(STATUS_CODES.OK).json(getLoyaltyPointsResponse);
     } catch (error) {

@@ -8,6 +8,7 @@ export interface Cart {
   coupon_code: string | null;
   products: Product[];
   coupon: Coupon | null;
+  applied_points?: number | null;
 }
 
 export interface UpdateCartInput {
@@ -16,5 +17,10 @@ export interface UpdateCartInput {
 }
 
 export interface MaximumRedeemablePoints {
+  points: number;
+}
+
+export interface GetLoyaltyPointsAmunt {
+  cart_id: string;
   points: number;
 }
