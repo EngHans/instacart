@@ -1,14 +1,15 @@
 import { Cart } from "../entities/carts";
 import { Coupon } from "../entities/coupons";
 
-export const calculateTotal = (cart: Cart): number => {
+export const calculateTotal = (cart: Cart, amountCashbackEquivalence?: number | null): number => {
   const totalBeforeDiscounts = cart.products.reduce((accumulated, product) => {
     return accumulated + product.price * product.quantity;
   }, 0);
 
   const discounts = calculateDiscounts(cart, totalBeforeDiscounts);
 
-  return totalBeforeDiscounts - discounts;
+  console.log(totalBeforeDiscounts, discounts, amountCashbackEquivalence ?? 0);
+  return totalBeforeDiscounts - discounts - (amountCashbackEquivalence ?? 0);
 };
 
 export const calculateDiscounts = (cart: Cart, subtotal: number): number => {

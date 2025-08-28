@@ -16,6 +16,17 @@ export const getCustomerLoyaltyDetails = async (user_id: string): Promise<Loyalt
   return buildLoyaltyResponse(customerLoyaltyResponse);
 };
 
+export const getEquivalenceDetails = async (
+  user_id: string,
+  cashback_points: number,
+): Promise<RedemptionEquivalenceResponse> => {
+  const customerLoyaltyResponse = await httpRequest(
+    "GET",
+    `/api/customers/${user_id}/loyalty/points/${cashback_points}/equivalence`,
+  );
+  return buildEquivalenceFromResponse(customerLoyaltyResponse);
+};
+
 const buildLoyaltyResponse = (response: any): LoyaltyResponse => {
   return {
     points: response.points as number,
