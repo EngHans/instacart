@@ -75,12 +75,32 @@ export const saveCart = async (session: PoolClient, cart: Cart): Promise<void> =
   }
 };
 
+export const applyPointsToCart = async (session: PoolClient, cart: Cart): Promise<void> => {
+  try {
+    const query = format(
+      `
+      UPDATE %s
+      SET assigned_points = %L
+      WHERE id = %L
+      `,
+      DBTables.CARTS_TABLE,
+      cart.assigned_points,
+      cart.id,
+    );
+
+    await session.query(query);
+  } catch (error) {
+    throw new NotFoundError(ErrorMessage.COULD_NOT_UPDATE_CART);
+  }
+};
+
 const buildCartFromRow = async (session: PoolClient, row: any): Promise<Cart> => {
   return {
     id: row.id,
     user_id: row.user_id,
     coupon_code: row.coupon_code ?? null,
     total: 0,
+    assigned_points: row?.assigned_points ?? null,
     products: await getProductsByCartId(session, row.id as string),
     coupon: row.coupon_code ? await getCouponByCouponCode(session, row.coupon_code as string) : null,
   };

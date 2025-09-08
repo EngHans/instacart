@@ -25,8 +25,21 @@ const buildLoyaltyResponse = (response: any): LoyaltyResponse => {
 
 const buildEquivalenceFromResponse = (response: any): RedemptionEquivalenceResponse => {
   return {
-    currencyCode: response.currencyCode as string,
-    conversionRate: parseInt(response.conversionRate as string, 10),
-    conversionValue: parseInt(response.conversionValue as string, 10),
+    currencyCode: response?.currencyCode as string,
+    conversionRate: parseInt(response?.conversionRate as string, 10),
+    conversionValue: parseInt(response?.conversionValue as string, 10),
+  };
+};
+
+export const getSwapPointsToCoins = async (points: number): Promise<LoyaltyResponse> => {
+  const swapPointsToCoinsResponse = await httpRequest("GET", `/api/customers/1/loyalty/points/${points}/equivalence`);
+
+  return buildSwapPointsToCoinsResponse(swapPointsToCoinsResponse, points);
+};
+
+const buildSwapPointsToCoinsResponse = (response: any, points: number): LoyaltyResponse => {
+  return {
+    points,
+    redemptionEquivalence: buildEquivalenceFromResponse(response),
   };
 };

@@ -1,0 +1,26 @@
+meta {
+  name: Apply Points To Cart
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://127.0.0.1:3000/carts/:id/apply_loyalty_points_to_cart
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: da99f49a-2ce4-4f54-b5cf-8d8caa4e057c
+}
+
+body:json {
+  {
+    "points": 10,
+    "user_id": "ea9895b9-dbd7-488e-b96f-837ea66fa1ed"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

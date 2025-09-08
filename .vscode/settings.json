@@ -1,0 +1,27 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "[markdown]": {
+    "editor.quickSuggestions": {
+      "strings": "on",
+      "other": "on",
+      "comments": "on"
+    }
+  },
+  "workbench.editor.customLabels.enabled": true,
+  "workbench.editor.customLabels.patterns": {
+    "**/domain/**": "${filename}.${extname} - 🎓 Domain",
+    "**/application/**": "${filename}.${extname} - 🤖 Application",
+    "**/infrastructure/**": "${filename}.${extname} - 📡 Infrastructure",
+    "**/presentation/**": "${filename}.${extname} - 🖥️ Presentation",
+    "**/prisma/**": "${filename}.${extname} - 📔 Database",
+    "**/database/**": "${filename}.${extname} - 📚 Database",
+    "**/tests/**": "${filename}.${extname} - 🧪 Tests",
+    "**/config/**": "${filename}.${extname} - 🔧 Config",
+    "**/app.**.ts/**": "${filename}.${extname} - 🧩 App",
+    "**/main.ts/**": "${filename}.${extname} - 🚀 Main"
+  }
+}

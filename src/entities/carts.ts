@@ -5,6 +5,7 @@ export interface Cart {
   id: string;
   user_id: string;
   total: number;
+  assigned_points: number | null;
   coupon_code: string | null;
   products: Product[];
   coupon: Coupon | null;
@@ -17,4 +18,14 @@ export interface UpdateCartInput {
 
 export interface MaximumRedeemablePoints {
   points: number;
+}
+
+export interface ApplyLoyaltyPointsToCartInput extends Pick<UpdateCartInput, "cart_id">, MaximumRedeemablePoints {
+  user_id: string;
+}
+
+export interface EquivalenceResult {
+  conversionValue: string;
+  conversionRate: number;
+  currencyCode: string;
 }

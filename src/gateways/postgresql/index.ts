@@ -1,5 +1,5 @@
 import pool from "./api";
-import { getCartById, getCarts, saveCart } from "./carts";
+import { applyPointsToCart, getCartById, getCarts, saveCart } from "./carts";
 import { getCouponByCouponCode } from "./coupons";
 
 export default {
@@ -8,4 +8,5 @@ export default {
   getCartById,
   saveCart,
   getCouponByCouponCode,
+  applyPointsToCart,
 };
